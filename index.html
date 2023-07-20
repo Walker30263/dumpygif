@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta property="og:title" content='Among Us "Gif" Generator'/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content=""/>
+    <meta property="og:description" content="don't question this"/>
+    <meta property="og:image" content="/gif-images/1.png"/>
+    <title>Among Us "Gif" Generator</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <script type="module" src="sus.js"></script>
+    <script type="module" src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gifshot/build/gifshot.min.js"></script>
+  </head>
+  <body>
+    <h1>Among Us Gif Generator</h1>
+    <form id="settings">
+      <label for="imageInput">Upload an image to sussify:</label>
+      <br>
+      <input id="imageInput" type="file" accept="image/*" required>
+      <br><br>
+      <label id="numberOfImpostorsDisplay" for="numberOfImpostors">Lines of Sussy Bakas: 15</label>
+      <br>
+      <input id="numberOfImpostors" type="range" min=5 max=50 value=15>
+      <br><br>
+      <label id="gifSpeedDisplay" for="gifSpeed">Gif speed... 😏: 150 ms</label>
+      <br>
+      <input id="gifSpeed" type="range" min=25 max=500 value=150>
+      <br><br>
+      <input id="choreographed" type="checkbox">
+      <label for="choreographed">Choreographed (all impostors are in the same position at any given time)</label>
+      <br>
+      <button id="btnGenerate" type="submit" disabled>Loading...</button>
+    </form>
+    <div id="status"></div>
+    <div id="output">
+      <h1>Your gif:</h1>
+      <img id="outputImage">
+      <button id="btnDownload">Download</button>
+      <br>
+    </div>
+  </body>
+</html>
