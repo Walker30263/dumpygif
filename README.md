@@ -24,13 +24,16 @@ For example, images like flags require less contrast, as they have a lower numbe
 However, more sophisticated images with a higher number of unique colors/gradients require more contrast to be intelligible:
 
 ![Walter White](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/walter-60lsb-150ms-1x-nc.gif)
+
 (created with 60 lines of sussy bakas)
 
 Just a warning, the more lines of sussy bakas you want in your gif, the longer it's going to take to generate the gif.
 
 ### Gif speed
 Self-explanatory..
+
 Lower delay in ms = faster gif
+
 Higher delay = slower gif
 
 ### Enlarge Output
