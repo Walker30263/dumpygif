@@ -1,3 +1,10 @@
+/*
+  I am incredibly sorry to anyone who is reading this spaghetti code,
+  I tried to comment to the best of my ability </3 
+
+  Feel free to suggest ways to make this more efficient 
+*/
+
 class Pixel {
   constructor(r, g, b, a) {
     this.red = r,
@@ -13,9 +20,11 @@ let gifmaker = new Dumpy();
 let numberOfImpostors = document.getElementById("numberOfImpostors");
 let gifSpeed = document.getElementById("gifSpeed");
 let choreographed = document.getElementById("choreographed");
+let enlargeOutput = document.getElementById("enlargeOutput");
 let imageInput = document.getElementById("imageInput");
 let btnGenerate = document.getElementById("btnGenerate");
 let status = document.getElementById("status");
+let loader = document.getElementById("loader");
 let outputImage = document.getElementById("outputImage");
 let btnDownload = document.getElementById("btnDownload");
 
@@ -23,7 +32,8 @@ let btnDownload = document.getElementById("btnDownload");
 var totalColors;
 var impostorColorsMade = 0;
 
-function getTotalColors(arr) {
+//gets the number of unique colors in the pixels array (which is the expected input)
+function getTotalUniqueColors(arr) {
   let newArr = arr.map((el) => {
     return JSON.stringify(el);
   });
@@ -40,7 +50,7 @@ var sprites = new Map();
 
 window.onload = async function() {
   for (let i = 1; i <= 6; i++) {
-    let impostor = await loadImage(`gif-images/${i}.png`);
+    let impostor = await loadImage(`assets/gif-images/${i}.png`);
     sprites.set(i, impostor);
   }
 
@@ -55,7 +65,7 @@ numberOfImpostors.addEventListener("mousemove", updateNumberOfImpostorsLabel);
 numberOfImpostors.addEventListener("change", updateNumberOfImpostorsLabel);
 
 function updateNumberOfImpostorsLabel() {
-  document.getElementById("numberOfImpostorsDisplay").textContent = "Lines of Sussy Bakas: " + numberOfImpostors.value;
+  document.getElementById("numberOfImpostorsDisplay").innerHTML = `Lines of Sussy Bakas: <strong>${numberOfImpostors.value}</strong><br>(higher value = better "resolution" but will take more time to generate)`;
 }
 
 //update the gif speed label when the input value changes
@@ -68,6 +78,20 @@ function updateGifSpeedLabel() {
   document.getElementById("gifSpeedDisplay").textContent = "Gif speed... 😏: " + gifSpeed.value + " ms";
 }
 
+//update the enlarge output label when the input value changes (actual value = input value/100)
+enlargeOutput.addEventListener("mouseup", updateEnlargeOutputLabel);
+enlargeOutput.addEventListener("mousedown", updateEnlargeOutputLabel);
+enlargeOutput.addEventListener("mousemove", updateEnlargeOutputLabel);
+enlargeOutput.addEventListener("change", updateEnlargeOutputLabel);
+
+function updateEnlargeOutputLabel() {
+  if (enlargeOutput.value == 100) {
+    document.getElementById("enlargeOutputDisplay").textContent = "Enlarge Output: 1x (Default, no enlargement)";
+  } else {
+    document.getElementById("enlargeOutputDisplay").textContent = "Enlarge Output: " + (enlargeOutput.value/100).toFixed(2) + "x";
+  }
+}
+
 //when the generate button is clicked...
 btnGenerate.addEventListener("click", async function(e) {
   e.preventDefault(); //prevent page from reloading
@@ -78,20 +102,27 @@ btnGenerate.addEventListener("click", async function(e) {
   status.style.display = "block";
   status.textContent = "Loading Image...";
 
+  loader.style.display = "block";
+
+  output.style.display = "none";
+
   let reader = new FileReader();
   reader.onload = async function(event) {
     let img = new Image();
     status.textContent = "Coloring impostors...";
-    img.onload = async function() {      
+    img.onload = async function() {
+      gifmaker.setMultiplier(enlargeOutput.value / 100);
+      gifmaker.setOriginalDimensions(img.height, img.width);
+
+      //this will determine the number of impostors we have in the output gif
       let resizedDimensions = resizeImage(img.height, img.width, numberOfImpostors.value);
+      gifmaker.setDimensions(resizedDimensions.height, resizedDimensions.width);
+      
       let tempCanvas = document.createElement("canvas");
       let tempCtx = tempCanvas.getContext("2d");
       tempCanvas.width = resizedDimensions.width;
       tempCanvas.height = resizedDimensions.height;
       tempCtx.drawImage(img, 0, 0, resizedDimensions.width, resizedDimensions.height);
-
-      gifmaker.setOriginalDimensions(img.height, img.width);
-      gifmaker.setDimensions(resizedDimensions.height, resizedDimensions.width);
       
       var imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       let pixels = [];
@@ -101,8 +132,9 @@ btnGenerate.addEventListener("click", async function(e) {
         pixels.push(pixel);
       }
 
-      totalColors = getTotalColors(pixels);
       gifmaker.setPixels(pixels);
+      
+      totalColors = getTotalUniqueColors(pixels);
 
       let impostors = await createImpostors(pixels);
       gifmaker.setDictionary(impostors);
@@ -115,18 +147,21 @@ btnGenerate.addEventListener("click", async function(e) {
       status.textContent = "Rendering gif...";
       let gifBlob = await gifmaker.generateGif(gifSpeed.value);
 
+      gifBlob = URL.createObjectURL(gifBlob);
+      
       console.log(gifBlob);
       
-      outputImage.width = img.width;
-      outputImage.height = img.height;
+      outputImage.width = img.width*(enlargeOutput.value / 100);
+      outputImage.height = img.height*(enlargeOutput.value / 100);
       outputImage.src = gifBlob;
       
 
-      //reset the form
-      document.getElementById("settings").reset();
-      document.getElementById("numberOfImpostorsDisplay").textContent = "Lines of Sussy Bakas: " + numberOfImpostors.value;
-
+      //reset the file input field
+      document.getElementById("imageInput").value = null;
+      impostorColorsMade = 0;
+      
       status.style.display = "none";
+      loader.style.display = "none";
       document.getElementById("output").style.display = "block"; //make the output container visible
       btnGenerate.disabled = false;
       btnGenerate.textContent = "Generate";
@@ -165,7 +200,7 @@ async function createImpostors(pixels) {
   let impostorsOfDifferentColors = {};
   
   for (let i = 0; i < pixels.length; i++) {
-    //if the map doesn't already have the impostor in the current pixel's color, color the impostor
+    //if the object doesn't already have the impostor in the current pixel's color, color the impostor
     if (!(JSON.stringify(pixels[i]) in impostorsOfDifferentColors)) {
       let impostorsOfThisColor = {};
       for (let j = 1; j <= 6; j++) {
@@ -176,8 +211,8 @@ async function createImpostors(pixels) {
       impostorsOfDifferentColors[JSON.stringify(pixels[i])] = impostorsOfThisColor;
       
       impostorColorsMade++;
-      status.innerHTML = `Coloring impostors...${impostorColorsMade}/${totalColors}`;
-      console.log(impostorColorsMade + "/" + totalColors);
+      status.innerHTML = `Coloring impostors... ${impostorColorsMade}/${totalColors}`;
+      await pause(0); //quick fix to update the page using statement above because the thing runs so fast it doesn't stop and update status' textContent until all of the impostors are colored
     }
   }
 
@@ -234,6 +269,10 @@ async function loadImage(imageUrl) {
     img.onerror = () => reject(new Error('Failed to load image'));
     img.src = imageUrl;
   });
+}
+
+async function pause(x) {
+  await new Promise(resolve => setTimeout(resolve, x));
 }
 
 const pSBC=(p,c0,c1,l)=>{

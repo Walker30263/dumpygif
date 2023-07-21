@@ -12,9 +12,12 @@
     <title>Among Us "Gif" Generator</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <script type="module" src="sus.js"></script>
-    <script type="module" src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gifshot/build/gifshot.min.js"></script>
+    <script type="module" src="/sus.js"></script>
+    <script type="module" src="/script.js"></script>
+    
+    <!-- W library: https://github.com/jnordberg/gif.js -->
+    <script src="/gifjs/gif.js"></script>
+    <script src="/gifjs/gif.worker.js"></script>
   </head>
   <body>
     <h1>Among Us Gif Generator</h1>
@@ -23,13 +26,17 @@
       <br>
       <input id="imageInput" type="file" accept="image/*" required>
       <br><br>
-      <label id="numberOfImpostorsDisplay" for="numberOfImpostors">Lines of Sussy Bakas: 15</label>
+      <label id="numberOfImpostorsDisplay" for="numberOfImpostors">Lines of Sussy Bakas: <strong>15</strong> <br>(higher value = better "resolution" but will take more time to generate)</label>
       <br>
-      <input id="numberOfImpostors" type="range" min=5 max=50 value=15>
+      <input id="numberOfImpostors" type="range" min=5 max=60 value=15>
       <br><br>
       <label id="gifSpeedDisplay" for="gifSpeed">Gif speed... 😏: 150 ms</label>
       <br>
       <input id="gifSpeed" type="range" min=25 max=500 value=150>
+      <br><br>
+      <label id="enlargeOutputDisplay" for="enlargeOutput">Enlarge Output: 1x (Default, no enlargement)</label>
+      <br>
+      <input id="enlargeOutput" type="range" min=100 max=300 value=100>
       <br><br>
       <input id="choreographed" type="checkbox">
       <label for="choreographed">Choreographed (all impostors are in the same position at any given time)</label>
@@ -37,11 +44,20 @@
       <button id="btnGenerate" type="submit" disabled>Loading...</button>
     </form>
     <div id="status"></div>
+    <div id="loader"></div>
     <div id="output">
       <h1>Your gif:</h1>
       <img id="outputImage">
       <button id="btnDownload">Download</button>
       <br>
+    </div>
+    <div class="footer">
+      <p class="footer-text-left">
+        Made with ☕❤
+      </p>
+      <div class="footer-content-right">
+        <a href="https://github.com/Walker30263/dumpygif" target="_blank" rel="noreferrer"><img src="/assets/socials/github.png" class="icon-style" alt="GitHub icon"></a>
+      </div>
     </div>
   </body>
 </html>

@@ -13,8 +13,13 @@ class Dumpy {
   setDimensions(height, width) {
     this.height = height;
     this.width = width;
-    this.impostorHeight = this.originalHeight/height;
-    this.impostorWidth = this.originalWidth/width;
+    this.impostorHeight = this.originalHeight*this.multiplier/height;
+    this.impostorWidth = this.originalWidth*this.multiplier/width;
+  }
+
+  // increases the output image size by a factor of "factor" compared to the image that was uploaded
+  setMultiplier(factor) {
+    this.multiplier = factor;
   }
 
   /*
@@ -39,7 +44,8 @@ class Dumpy {
       for (let i = 0; i < 6; i++) {
         document.getElementById("status").textContent = `Creating frames...${i+1}/6`;
         let image = await this.generateImage(seed);
-        this.images.push(image);
+        let img = await loadImage(image); // actual Image() object
+        this.images.push(img);
         seed = incrementSeedPositions(seed);
       }
 
@@ -49,31 +55,33 @@ class Dumpy {
 
   async generateGif(interval) {
     return new Promise((resolve, reject) => {
-      gifshot.createGIF({
-        gifWidth: this.originalWidth,
-        gifHeight: this.originalHeight,
-        images: this.images,
-        interval: interval/1000,
-        numWorkers: 2,
-        sampleInterval: 1
-      }, (gif) => {
-        if (gif.error) {
-          reject(gif.error);
-        } else {
-          resolve(gif.image);
-        }
+      let gif = new GIF({
+        workers: 2,
+        quality: 10
       });
+
+      this.images.forEach((image) => {
+        gif.addFrame(image, {
+          delay: interval
+        });
+      });
+
+      gif.on('finished', function(blob) {
+        resolve(blob);
+      });
+
+      gif.render();
     });
   }
 
-  // "seed" is an array of positions (numbers from 1-6 corresponding to /gif-images/[number].png) that's height*width long
+  // "seed" is an array of positions (numbers from 1-6 corresponding to assets/gif-images/[number].png) that's height*width long
   async generateImage(seed) {
     return new Promise(async (resolve) => {
       let c = document.createElement("canvas"); //make a temporary canvas to draw the image on
       let ctx = c.getContext("2d");
 
-      c.width = this.originalWidth;
-      c.height = this.originalHeight;
+      c.width = this.originalWidth*this.multiplier;
+      c.height = this.originalHeight*this.multiplier;
       
       for (let row = 0; row < this.height; row++) {
         for (let col = 0; col < this.width; col++) {
@@ -91,6 +99,15 @@ class Dumpy {
       resolve(c.toDataURL("image/png"));
     });
   }
+}
+
+async function loadImage(imageUrl) {
+  let img = new Image();
+  return new Promise((resolve, reject) => {
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = imageUrl;
+  });
 }
 
 // returns a "length" long array of positions (numbers from [1, 6]), can be randomly generated or not 
