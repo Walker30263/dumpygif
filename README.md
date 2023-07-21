@@ -1,4 +1,6 @@
 # [DumpyGif](https://dumpygif.me/)
+![Logo](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/logo.gif)
+
 Hosted for free on [https://dumpygif.me/](https://dumpygif.me) thanks to repl.it! (And thanks to NameCheap for the free domain!)
 
 Heavily inspired by @ThatOneCalculator's [Among Us Dumpy Gif Maker](https://github.com/ThatOneCalculator/Among-Us-Dumpy-Gif-Maker) Discord bot. 
@@ -15,10 +17,14 @@ Heavily inspired by @ThatOneCalculator's [Among Us Dumpy Gif Maker](https://gith
 This lets you control the resolution / contrast of your image. 
 
 For example, images like flags require less contrast, as they have a lower number of unique colors and rarely have gradients:
-![](https://github.com/Walker30263/dumpygif/blob/main/assets/examples/pride-15lsb-150ms-1x.gif?raw=true)
+
+![Pride](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-15lsb-150ms-1x-nc.gif)
+(created with 15 lines of sussy bakas)
 
 However, more sophisticated images with a higher number of unique colors/gradients require more contrast to be intelligible:
-![](https://github.com/Walker30263/dumpygif/blob/main/assets/examples/walter-60lsb-150ms-1x-nc?raw=true)
+
+![Walter White](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/walter-60lsb-150ms-1x-nc.gif)
+(created with 60 lines of sussy bakas)
 
 Just a warning, the more lines of sussy bakas you want in your gif, the longer it's going to take to generate the gif.
 
@@ -31,11 +37,25 @@ Higher delay = slower gif
 By default, the dimensions of the gif produced will be exactly the same as the dimensions of the input image. If the input image is small, and you'd like your gif to be larger, you can use the "Enlarge Output" slider to increase the output dimensions by a multiplier.
 Here's a case where this would be useful:
 
+Starting image:
+![red impostor](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-impostor.jpg)
+
+Gif with default dimensions (same dimensions as starting image):
+![red impostor default size](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-30lsb-150ms-1x-nc.gif)
+
+Gif with "Enlarged Output" of 2.00x:
+![red impostor 2.00x](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-30lsb-150ms-2x-nc.gif)
 
 ### Choreographed
 If this is checked/turned on, all the impostors will be in the same "position" at the same time. 
+
 For example, the difference between
 
+![Pride-nc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-15lsb-150ms-1x-nc.gif)
+
+and
+
+![Pride-c](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-15lsb-150ms-1x-c.gif)
 # Algorithm
 (you can stop reading now if you're not a nerd and came here just to learn how to use this website)
 

@@ -32,7 +32,7 @@ body {
   }
 }
 
-#btnGenerate, #btnDownload {
+#btnGenerate, #btnDownload, #btnHelp {
   margin-top: 30px;
   padding: 10px;
   font-size: 1.5em;
@@ -40,10 +40,16 @@ body {
   background-color: black;
   color: white;
   border-radius: 22px;
+  transition: 0.2s;
+  cursor: pointer;
 }
 
-#btnGenerate:hover, #btnDownload:hover {
+#btnGenerate:hover, #btnDownload:hover, #btnHelp:hover {
   transform: scale(110%);
+}
+
+#btnHelp {
+  margin-left: 25px;
 }
 
 #btnDownload {

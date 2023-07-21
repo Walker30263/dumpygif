@@ -23,6 +23,7 @@ let choreographed = document.getElementById("choreographed");
 let enlargeOutput = document.getElementById("enlargeOutput");
 let imageInput = document.getElementById("imageInput");
 let btnGenerate = document.getElementById("btnGenerate");
+let btnHelp = document.getElementById("btnHelp");
 let status = document.getElementById("status");
 let loader = document.getElementById("loader");
 let outputImage = document.getElementById("outputImage");
@@ -274,6 +275,10 @@ async function loadImage(imageUrl) {
 async function pause(x) {
   await new Promise(resolve => setTimeout(resolve, x));
 }
+
+btnHelp.addEventListener("click", function() {
+  window.open('https://github.com/Walker30263/dumpygif', '_blank');
+});
 
 const pSBC=(p,c0,c1,l)=>{
 	let r,g,b,P,f,t,h,m=Math.round,a=typeof(c1)=="string";
