@@ -41,12 +41,15 @@ By default, the dimensions of the gif produced will be exactly the same as the d
 Here's a case where this would be useful:
 
 Starting image:
+
 ![red impostor](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-impostor.jpg)
 
 Gif with default dimensions (same dimensions as starting image):
+
 ![red impostor default size](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-30lsb-150ms-1x-nc.gif)
 
 Gif with "Enlarged Output" of 2.00x:
+
 ![red impostor 2.00x](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-30lsb-150ms-2x-nc.gif)
 
 ### Choreographed
