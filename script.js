@@ -19,7 +19,6 @@ let gifmaker = new Dumpy();
 
 let numberOfImpostors = document.getElementById("numberOfImpostors");
 let gifSpeed = document.getElementById("gifSpeed");
-let choreographed = document.getElementById("choreographed");
 let enlargeOutput = document.getElementById("enlargeOutput");
 let imageInput = document.getElementById("imageInput");
 let btnGenerate = document.getElementById("btnGenerate");
@@ -28,6 +27,11 @@ let status = document.getElementById("status");
 let loader = document.getElementById("loader");
 let outputImage = document.getElementById("outputImage");
 let btnDownload = document.getElementById("btnDownload");
+
+let choreographed = document.getElementById("choreographed");
+let basicC = document.getElementById("basicC");
+let rippleC = document.getElementById("rippleC");
+let waveC = document.getElementById("waveC");
 
 //for status purposes
 var totalColors;
@@ -93,6 +97,34 @@ function updateEnlargeOutputLabel() {
   }
 }
 
+// display additional settings when choreographed is checked
+
+choreographed.addEventListener("change", function() {
+  if (choreographed.checked) {
+    document.getElementById("choreographyTypeContainer").style.display = "block";
+  } else {
+    document.getElementById("choreographyTypeContainer").style.display = "none";
+  }
+});
+
+basicC.addEventListener("change", function() {
+  if (basicC.checked) {
+    document.getElementById("waveDirectionsContainer").style.display = "none";
+  }
+});
+
+rippleC.addEventListener("change", function() {
+  if (rippleC.checked) {
+    document.getElementById("waveDirectionsContainer").style.display = "none";
+  }
+});
+
+waveC.addEventListener("change", function() {
+  if (waveC.checked) {
+    document.getElementById("waveDirectionsContainer").style.display = "block";
+  }
+});
+
 //when the generate button is clicked...
 btnGenerate.addEventListener("click", async function(e) {
   e.preventDefault(); //prevent page from reloading
@@ -114,6 +146,7 @@ btnGenerate.addEventListener("click", async function(e) {
     img.onload = async function() {
       gifmaker.setMultiplier(enlargeOutput.value / 100);
       gifmaker.setOriginalDimensions(img.height, img.width);
+      gifmaker.setChoreographySettings(getChoreographyData());
 
       //this will determine the number of impostors we have in the output gif
       let resizedDimensions = resizeImage(img.height, img.width, numberOfImpostors.value);
@@ -158,7 +191,7 @@ btnGenerate.addEventListener("click", async function(e) {
       
 
       //reset the file input field
-      document.getElementById("imageInput").value = null;
+      // document.getElementById("imageInput").value = null;
       impostorColorsMade = 0;
       
       status.style.display = "none";
@@ -274,6 +307,35 @@ async function loadImage(imageUrl) {
 
 async function pause(x) {
   await new Promise(resolve => setTimeout(resolve, x));
+}
+
+// helper function to quickly get choreography data:
+
+function getChoreographyData() {
+  let obj = {};
+
+  if (choreographed.checked) {
+    obj.choreography = true;
+  } else {
+    obj.choreography = false;
+    return obj;
+  }
+
+  if (basicC.checked) {
+    obj.type = "basic";    
+  } else if (waveC.checked) {
+    obj.type = "wave";
+    
+    if (document.getElementById("horizontal").checked) {
+      obj.direction = "horizontal";
+    } else if (document.getElementById("vertical").checked) {
+      obj.direction = "vertical";
+    }
+  } else if (rippleC.checked) {
+    obj.type = "ripple";
+  }
+
+  return obj;
 }
 
 btnHelp.addEventListener("click", function() {
