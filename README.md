@@ -1,3 +1,4 @@
+
 # [DumpyGif](https://dumpygif.me/)
 ![Logo](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/logo.gif)
 
@@ -53,15 +54,28 @@ Gif with "Enlarged Output" of 2.00x:
 ![red impostor 2.00x](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/red-30lsb-150ms-2x-nc.gif)
 
 ### Choreographed
-If this is checked/turned on, all the impostors will be in the same "position" at the same time. 
+If this is unchecked/turned off, impostors will be in random positions at any given time. 
 
-For example, the difference between
+If this is checked/turned on, you will be given access to more choreography options, which will determine the positions of the impostors at random times.
+
+As of 07/22/2023, we have 3 choreography options: basic, ripple, and wave:
+
+No choreography:
 
 ![Pride-nc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-15lsb-150ms-1x-nc.gif)
 
-and
+Basic choreography:
 
 ![Pride-c](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-15lsb-150ms-1x-c.gif)
+
+Ripple choreography (works better with higher lines of sussy bakas):
+
+![Pride-rc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-40lsb-150ms-1x-rc.gif)
+
+Wave choreography (works better with higher lines of sussy bakas):
+![Pride-wc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-40lsb-150ms-1x-wc.gif)
+(For wave choreography, you can choose whether you want the waves to go in the horizontal or vertical direction.)
+
 # Algorithm
 (you can stop reading now if you're not a nerd and came here just to learn how to use this website)
 
@@ -77,7 +91,7 @@ Checkpoint: we now have an array of pixels that we will replace with impostors a
 
 7. We can generate an image using a seed using this basic algorithm:
 	For every pixel in the array of pixels, draw an impostor with the pixel's color on a grid. The seed is an array containing numbers from 1-6 to represent the position that each impostor is in during its "dance routine." To generate the next image, we simply increment every value in the seed (and reroll 6s over to 1s) until we have 6 frames. 
-	A user can also choose to start with a seed that's all 1s, if they want a "choreographed" gif.
+	A user can also choose to start with a seed that's all 1s, if they want a basic "choreographed" gif. Other seed generation methods can be found in seedBaker.js
 8. Use [gif.js](https://jnordberg.github.io/gif.js/) to create a gif from these frames, and display it to the user and let them download it if they wish!
 
 
