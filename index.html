@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta property="og:title" content='Among Us "Gif" Generator'/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content=""/>
-    <meta property="og:description" content="don't question this"/>
+    <meta property="og:url" content="https://dumpygif.me"/>
+    <meta property="og:description" content="drinking the amogus potion at 3 AM (real)"/>
     <meta property="og:image" content="/gif-images/1.png"/>
     <title>Among Us "Gif" Generator</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
@@ -41,6 +41,27 @@
       <input id="choreographed" type="checkbox">
       <label for="choreographed">Choreographed (all impostors are in the same position at any given time)</label>
       <br>
+      <div id="choreographyTypeContainer">
+        <h3>Choreography Type:</h3>
+        <input type="radio" name="choreographyType" value="basic" id="basicC" checked>
+        <label for="basicC">Basic</label>
+        <br>
+        <input type="radio" name="choreographyType" value="ripple" id="rippleC">
+        <label for="rippleC">Ripple (experimental)</label>
+        <br>
+        <input type="radio" name="choreographyType" value="wave" id="waveC">
+        <label for="waveC">Wave (experimental)</label>
+        <br>
+      </div>
+      <div id="waveDirectionsContainer">
+        <h3>Wave Direction:</h3>
+        <input type="radio" name="waveDirection" value="left-to-right" id="horizontal" checked/>
+        <label for="horizontal">Horizontal</label>
+        <br>
+        <input type="radio" name="waveDirection" value="top-to-bottom" id="vertical" />
+        <label for="vertical">Vertical</label>
+        <br>
+      </div>
       <button id="btnGenerate" type="submit" disabled>Loading...</button>
       <button id="btnHelp">Help</button>
     </form>
