@@ -1,3 +1,5 @@
+const seedWorker = new Worker("seedBaker.js"); 
+
 class Dumpy {
   constructor() {
     
@@ -22,6 +24,10 @@ class Dumpy {
     this.multiplier = factor;
   }
 
+  setChoreographySettings(data) {
+    this.choreographySettings = data;
+  }
+
   /*
     "impostors" is an object with keys being different colors,
     and each of those keys' keys being 6 different impostors 
@@ -35,21 +41,29 @@ class Dumpy {
     this.pixels = data;
   }
 
-  async generateFrames(choreographed) {
+  async generateFrames() {
     return new Promise(async (resolve) => {
       this.images = []; // to store the frames to make the gif from
-    
-      let seed = seedGenerator(this.height*this.width, !choreographed);
-  
-      for (let i = 0; i < 6; i++) {
-        document.getElementById("status").textContent = `Creating frames...${i+1}/6`;
-        let image = await this.generateImage(seed);
-        let img = await loadImage(image); // actual Image() object
-        this.images.push(img);
-        seed = incrementSeedPositions(seed);
-      }
 
-      resolve();
+      document.getElementById("status").textContent = "Baking Animations...";
+      seedWorker.postMessage([this.height, this.width, this.choreographySettings]);
+      
+      let dumpy = this;
+      
+      seedWorker.addEventListener("message", async function(e) {
+        document.getElementById("status").textContent = "Drawing frames...";
+        let seed = e.data;
+        
+        for (let i = 0; i < 6; i++) {
+          document.getElementById("status").textContent = `Creating frames...${i+1}/6`;
+          let image = await dumpy.generateImage(seed);
+          let img = await loadImage(image); // actual Image() object
+          dumpy.images.push(img);
+          seed = incrementSeedPositions(seed);
+        }
+  
+        resolve();
+      });
     });
   }
 
@@ -86,7 +100,7 @@ class Dumpy {
       for (let row = 0; row < this.height; row++) {
         for (let col = 0; col < this.width; col++) {
           let pixel = this.pixels[row * this.width + col];
-          let position = seed[row * this.width + col];
+          let position = seed[row][col];
           let impostorDataURL = this.impostors[JSON.stringify(pixel)][position];
           
           let impostor = new Image();
@@ -110,25 +124,12 @@ async function loadImage(imageUrl) {
   });
 }
 
-// returns a "length" long array of positions (numbers from [1, 6]), can be randomly generated or not 
-function seedGenerator(length, random) {
-  let seed = [];
-  
-  for (let i = 0; i < length; i++) {
-    if (random) {
-      seed.push(Math.floor((Math.random()*6)+1));
-    } else {
-      seed.push(1);
+function incrementSeedPositions(seed) {
+  for (let i = 0; i < seed.length; i++) {
+    for (let j = 0; j < seed[i].length; j++) {
+      seed[i][j] = (seed[i][j] % 6) + 1;
     }
   }
-
-  return seed;
-}
-
-function incrementSeedPositions(seed) {
-  seed.forEach((element, index) => {
-    seed[index] = (element % 6) + 1;
-  });
 
   return seed;
 }
