@@ -12,6 +12,26 @@ class Pixel {
     this.blue = b,
     this.a = a
   }
+
+  replace(pixel) {
+    this.red = pixel.red;
+    this.green = pixel.green;
+    this.blue = pixel.blue;
+    this.a = pixel.a;
+  }
+
+  replaceValues(r, g, b) {
+    this.red = r;
+    this.green = g;
+    this.blue = b;
+  }
+
+  //source: http://www.compuphase.com/cmetric.htm
+  static distance(p1, p2) {
+    let redmean = (p1.red + p2.red)/2;
+
+    return Math.sqrt((2 + (redmean/256))*((p1.red - p2.red) ** 2) + (4*((p1.green - p2.green) ** 2)) + ((2+((255-redmean)/256))*(p1.blue - p2.blue) ** 2));
+  }
 }
 
 import Dumpy from '/sus.js';
@@ -32,6 +52,8 @@ let choreographed = document.getElementById("choreographed");
 let basicC = document.getElementById("basicC");
 let rippleC = document.getElementById("rippleC");
 let waveC = document.getElementById("waveC");
+
+let colorCollapse = document.getElementById("colorCollapse");
 
 //for status purposes
 var totalColors;
@@ -129,6 +151,11 @@ waveC.addEventListener("change", function() {
 btnGenerate.addEventListener("click", async function(e) {
   e.preventDefault(); //prevent page from reloading
 
+  if (imageInput.files.length === 0) {
+    alert("Please upload an image to sussify!");
+    return;
+  }
+
   btnGenerate.disabled = true;
   btnGenerate.textContent = "Generating...";
   
@@ -166,6 +193,16 @@ btnGenerate.addEventListener("click", async function(e) {
         pixels.push(pixel);
       }
 
+      if (colorCollapse.checked) {
+        for (let i = 0; i < pixels.length; i++) {
+          for (let j = i + 1; j < pixels.length; j++) {
+            if (Pixel.distance(pixels[i], pixels[j]) < 7) {
+              pixels[j].replace(pixels[i]);
+            }
+          }
+        } 
+      }
+      
       gifmaker.setPixels(pixels);
       
       totalColors = getTotalUniqueColors(pixels);
