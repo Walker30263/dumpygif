@@ -28,7 +28,7 @@ However, more sophisticated images with a higher number of unique colors/gradien
 
 (created with 60 lines of sussy bakas)
 
-Just a warning, the more lines of sussy bakas you want in your gif, the longer it's going to take to generate the gif.
+Just a warning, the more lines of sussy bakas you want in your gif, the longer it's going to take to generate the gif, and the more we recommend that you turn Color Collapse on.
 
 ### Gif speed
 Self-explanatory..
@@ -75,6 +75,26 @@ Ripple choreography (works better with higher lines of sussy bakas):
 Wave choreography (works better with higher lines of sussy bakas):
 ![Pride-wc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/pride-40lsb-150ms-1x-wc.gif)
 (For wave choreography, you can choose whether you want the waves to go in the horizontal or vertical direction.)
+
+### Color Collapse™
+To make a DumpyGif, we have to create a different impostor for each unique color in the image, which might take a lot of time with certain images. 
+
+If this is turned on, then the same impostor will be used for similar colors (colors that would have appeared the same to the average human, although they might have been a few RGB values apart from each other). This will drastically speed up generation time for images that have thousands of different colors. 
+
+If this is turned off, different impostors will be created for colors that appear almost the same to the human eye. 
+
+For example:
+
+Original Image: 
+![original-image](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/zhongli.png)
+
+Gif created without Color Collapse (5783 unique colors):
+![without-cc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/zhongli-100lsb-150ms.gif)
+
+Gif created with Color Collapse (2123 unique colors) took **65% less time** to generate:
+![with-cc](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/zhongli-100lsb-150ms-cc.gif)
+
+(We use [this](http://www.compuphase.com/cmetric.htm) algorithm to evaluate how "close" colors are to each other. Interesting read if you're into Color Perception Theory.)
 
 # Algorithm
 (you can stop reading now if you're not a nerd and came here just to learn how to use this website)
