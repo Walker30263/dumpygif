@@ -28,7 +28,7 @@
       <br><br>
       <label id="numberOfImpostorsDisplay" for="numberOfImpostors">Lines of Sussy Bakas: <strong>15</strong> <br>(higher value = better "resolution" but will take more time to generate)</label>
       <br>
-      <input id="numberOfImpostors" type="range" min=5 max=80 value=15>
+      <input id="numberOfImpostors" type="range" min=5 max=100 value=15>
       <br><br>
       <label id="gifSpeedDisplay" for="gifSpeed">Gif speed... 😏: 150 ms</label>
       <br>
@@ -36,7 +36,7 @@
       <br><br>
       <label id="enlargeOutputDisplay" for="enlargeOutput">Enlarge Output: 1x (Default, no enlargement)</label>
       <br>
-      <input id="enlargeOutput" type="range" min=100 max=300 value=100>
+      <input id="enlargeOutput" type="range" min=100 max=350 value=100>
       <br><br>
       <input id="choreographed" type="checkbox">
       <label for="choreographed">Choreographed (all impostors are in the same position at any given time)</label>
@@ -62,8 +62,12 @@
         <label for="vertical">Vertical</label>
         <br>
       </div>
+      <br>
+      <input id="colorCollapse" type="checkbox">
+      <label for="colorCollapse">Color Collapse&#8482; (drastically improves performance for a small reduction in contrast, recommended for mobile users)</label>
+      <br>
       <button id="btnGenerate" type="submit" disabled>Loading...</button>
-      <button id="btnHelp">Help</button>
+      <button id="btnHelp" type="button">Help</button>
     </form>
     <div id="status"></div>
     <div id="loader"></div>
