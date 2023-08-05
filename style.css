@@ -30,6 +30,10 @@ body {
   display: none;
 }
 
+.advancedSettings {
+  display: none;
+}
+
 /*For PC: */
 @media only screen and (min-width: 550px) {
   #settings {
@@ -44,7 +48,12 @@ body {
   }
 }
 
-#btnGenerate, #btnDownload, #btnHelp {
+#btnGenerate {
+  display: block;
+  margin: auto;
+}
+
+#btnGenerate, #btnDownload {
   margin-top: 30px;
   padding: 10px;
   font-size: 1.5em;
@@ -56,12 +65,8 @@ body {
   cursor: pointer;
 }
 
-#btnGenerate:hover, #btnDownload:hover, #btnHelp:hover {
+#btnGenerate:hover, #btnDownload:hover {
   transform: scale(110%);
-}
-
-#btnHelp {
-  margin-left: 25px;
 }
 
 #btnDownload {
@@ -80,6 +85,22 @@ body {
 #output {
   display: none;
   text-align: center;
+}
+
+/********** File Input Styles **********/
+
+#imageInput {
+  margin-top: 1rem;
+}
+
+#imageInput::file-selector-button {
+  font-weight: bold;
+  color: black;
+  padding: 0.5em;
+  background-color: #5cd5eb;
+  border: 3px solid #053a5f;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 /********** Range Input Styles **********/
@@ -150,6 +171,76 @@ input[type="range"]:focus::-moz-range-thumb {
   outline-offset: 0.125rem; 
 }
 
+/********** Number Input Styles **********/
+input[type="number"] {
+  margin: auto;
+  margin-top: 15px;
+  padding: 10px;
+  font-weight: bold;
+  border: 1px solid #053a5f;
+  background-color: #5cd5eb;
+  color: #000000;
+}
+
+/* Toggle Advanced Settings */
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #ccc;
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+  background: #5cd5eb;
+}
+
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 30px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
 
 /* Loader */
 
@@ -203,4 +294,16 @@ input[type="range"]:focus::-moz-range-thumb {
 
 .icon-style:hover {
   height: 55px;
+}
+
+/* Welcome alert:  */
+
+.welcomeInputLabel {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.alertLink {
+  color: inherit;
+  font-weight: bold;
 }
