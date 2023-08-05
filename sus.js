@@ -10,9 +10,66 @@ import Pixel from '/pixel.js';
 var sprites = {};
 
 window.onload = async function() {
+  // display welcome "alert" on pageload if they haven't seen it before 
+  if (!localStorage.getItem("dontDisplayWelcomeAlert")) {
+    const { value: checkboxes } = await Swal.fire({
+      title: "Welcome to DumpyGif!",
+      icon: "info",
+      html: `
+        You can use this website to generate a gif of impostors based on an uploaded image. (This website works best on a PC running Chrome.)
+        <br><br>
+        To view examples and learn what the different settings mean, check out our <a class="alertLink" href="https://github.com/Walker30263/dumpygif" target="_blank" rel="noopener noreferrer">GitHub Repository</a>! You can also find this at any time by clicking the icon on the bottom right of the page.
+        <br><br>
+        <input checked id="notificationToggle" type="checkbox" class="welcomeInput">
+        <label for="notificationToggle" class="welcomeInputLabel">
+          Allow Notifications (since sometimes it might take a while for gifs to generate)
+        </label>
+        <br><br>
+        <input id="neverSeeThisAgain" type="checkbox" class="welcomeInput">
+        <label for="neverSeeThisAgain" class="welcomeInputLabel">
+          Never see this Welcome message again
+        </label>
+        <br><br>
+        By using this website, you agree to our <a class="alertLink" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        return [
+          document.getElementById("notificationToggle").checked,
+          document.getElementById("neverSeeThisAgain").checked
+        ]
+      },
+      iconColor: "#ffffff",
+      background: "#c51111",
+      color: "#ffffff"
+    });
+  
+    if (checkboxes[0] === true) { // they want notifications 
+      localStorage.setItem("notifications", true);
+    }
+  
+    if (checkboxes[1] === true) { // they never want to see this alert again
+      localStorage.setItem("dontDisplayWelcomeAlert", true);
+    }
+  }
+  
   for (let i = 1; i <= 6; i++) {
     let impostor = await loadImageBitmap(`assets/gif-images/${i}.png`);
     sprites[i] = impostor;
+  }
+
+  //if they want notifs and their browser supports notifs and they haven't granted us permission yet to send notifs
+  if ((localStorage.getItem("notifications") == "true") && (typeof Notification !== "undefined") && (Notification.permission !== "granted")) {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        let notif = new Notification("thank u for giving us notif perms :3", {
+          body: "we promise not to spam you uwu",
+          icon: "assets/logo.png"
+        });
+
+        console.log(notif);
+      }
+    });
   }
 
   btnGenerate.textContent = "Generate";
@@ -34,10 +91,10 @@ async function loadImageBitmap(imageUrl) {
 let status = document.getElementById("status");
 
 class Dumpy {
-  constructor() {
+  constructor(workers, quality) {
     this.gif = new GIF({
-      workers: 4,
-      quality: 5
+      workers: workers,
+      quality: quality
     });
   }
   
@@ -171,6 +228,21 @@ class Dumpy {
   async generateGif() {
     return new Promise((resolve, reject) => {
       this.gif.on('finished', function(blob) {
+        if (document.visibilityState !== "visible") {
+          var notification = new Notification("Finished!", {
+            body: "Your gif has been generated!",
+            icon: "assets/logo.png"
+          });
+
+          notification.onclick = function() {
+            window.parent.focus();
+            notification.close();
+          }
+
+          let notifSound = new Audio("assets/notifSound.mp3");
+          notifSound.play();
+        }
+        
         resolve(blob);
       });
 
