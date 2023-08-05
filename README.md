@@ -96,6 +96,25 @@ Gif created with Color Collapse (2123 unique colors) took **65% less time** to g
 
 (We use [this](http://www.compuphase.com/cmetric.htm) algorithm to evaluate how "close" colors are to each other. Interesting read if you're into Color Perception Theory.)
 
+### Advanced Settings
+Warning: Before dabbling into Advanced Settings, please experiment with the website a bit to know the limits of your hardware. 
+
+If you choose to toggle Advanced Settings on, you will have direct control over certain variables, such as Lines of Sussy Bakas, Gif Speed, Enlarge Output Multiplier, and more. You won't be limited by the ranges anymore, you can directly type in the numbers that you want.
+
+You will also have access to certain additional variables, such as "Number of Workers" and "Pixel Sample Interval."
+
+Increasing the "Number of Workers" setting will speed up the GIF rendering process, but will consume more RAM, which might be a bad idea and lead to slowdowns if you're on a device with low RAM.
+
+The "Pixel Sample Interval" determines the level of detail and accuracy in the resulting GIF image. A smaller pixel sample interval means more frequent sampling, resulting in a higher level of detail but potentially larger file size.
+
+We plan on adding more Advanced Settings in the future to allow you to customize your DumpyGif experience to your heart's content! 
+
+For example, gif created using the example image from the Color Collapse™ section with 350 lines of sussy bakas and 5x enlargement (using 70% color collapse and 20 workers):
+
+![350lsb](https://raw.githubusercontent.com/Walker30263/dumpygif/main/assets/examples/zhongli_350lsb.gif)
+
+As you can see, Advanced Settings are helpful if you want to create a DumpyGif with high contrast.
+
 # Algorithm
 (you can stop reading now if you're not a nerd and came here just to learn how to use this website)
 
@@ -114,5 +133,5 @@ Checkpoint: we now have an array of pixels that we will replace with impostors a
 	A user can also choose to start with a seed that's all 1s, if they want a basic "choreographed" gif. Other seed generation methods can be found in seedBaker.js
 8. Use [gif.js](https://jnordberg.github.io/gif.js/) to create a gif from these frames, and display it to the user and let them download it if they wish!
 
-
+#
 If you have any questions or have any suggestions, please feel free to create an issue here on GitHub or contact me on Discord: @sky3.142
