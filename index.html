@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRQXEDNCK1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-GRQXEDNCK1');
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,10 +24,15 @@
     <script type="module" src="/pixel.js"></script>
     <script type="module" src="/sus.js"></script>
     <script type="module" src="/script.js"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8920276588691755"
+     crossorigin="anonymous"></script>
     
     <!-- W library: https://github.com/jnordberg/gif.js -->
     <script src="/gifjs/gif.js"></script>
     <script src="/gifjs/gif.worker.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <h1>Among Us Gif Generator</h1>
@@ -29,15 +43,18 @@
       <br><br>
       <label id="numberOfImpostorsDisplay" for="numberOfImpostors">Lines of Sussy Bakas: <strong>15</strong> <br>(higher value = better "resolution" but will take more time to generate)</label>
       <br>
-      <input id="numberOfImpostors" type="range" min=5 max=120 value=15>
+      <input id="numberOfImpostors" class="basicSettings" type="range" min="5" max="120" value="15">
+      <input id="numberOfImpostors_advanced" class="advancedSettings" type="number" min="1" step="0" value="15"/>
       <br><br>
       <label id="gifSpeedDisplay" for="gifSpeed">Gif speed... 😏: 150 ms</label>
       <br>
-      <input id="gifSpeed" type="range" min=25 max=500 value=150>
+      <input id="gifSpeed" class="basicSettings" type="range" min=25 max=500 value=150>
+      <input id="gifSpeed_advanced" class="advancedSettings" type="number" min="1" step="0" value="150"/>
       <br><br>
       <label id="enlargeOutputDisplay" for="enlargeOutput">Enlarge Output: 1x (Default, no enlargement)</label>
       <br>
-      <input id="enlargeOutput" type="range" min=100 max=400 value=100>
+      <input id="enlargeOutput" class="basicSettings" type="range" min=100 max=400 value=100>
+      <input id="enlargeOutput_advanced" class="advancedSettings" type="number" min="0.01" step="0.01" value="1.00"/>
       <br><br>
       <input id="choreographed" type="checkbox">
       <label for="choreographed">Choreographed (all impostors are in the same position at any given time)</label>
@@ -70,11 +87,28 @@
       <div id="compressionPercentContainer">
         <br>
         <label id="compressionPercentDisplay" for="compressionPercent">Compression: 60% (higher = less contrast, but faster generation time)</label>
-        <input id="compressionPercent" type="range" min=10 max=90 value=60>
+        <br>
+        <input id="compressionPercent" class="basicSettings" type="range" min=10 max=90 value=60>
+        <input id="compressionPercent_advanced" class="advancedSettings" type="number" min="0" max="99" step="1" value="60"/>
       </div>
-      
+      <div class="advancedSettings">
+        <br><br>
+        <strong>Would not recommend messing around here unless you know exactly what you're doing.</strong>
+        <br><br>
+        <label id="numWorkersDisplay" for="numWorkers">Number of workers: 5</label>
+        <br>
+        <input id="numWorkers" type="range" min="2" max="20" value="5" step="1">
+        <br><br>
+        <label id="gifQualityDisplay" for="gifQuality">Pixel Sample Interval: 10 (lower = higher quality GIF but will take longer to produce, and vice versa)</label>
+        <input id="gifQuality" class="advancedSettings" type="number" min="1" step="1" value="10"/>
+        <br>
+      </div>
+      <label class="toggle">
+        <input class="toggle-checkbox" type="checkbox" id="toggleAdvancedSettings">
+        <div class="toggle-switch"></div>
+        <span class="toggle-label">Advanced Settings</span>
+      </label>
       <button id="btnGenerate" type="submit" disabled>Loading...</button>
-      <button id="btnHelp" type="button">Help</button>
     </form>
     <div id="status"></div>
     <div id="loader"></div>
