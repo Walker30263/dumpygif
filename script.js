@@ -5,17 +5,21 @@
   Feel free to suggest ways to make this more efficient 
 */
 
+var advancedSettings = false;
+
 import Pixel from '/pixel.js';
 
 import Dumpy from '/sus.js';
 let gifmaker;
 
 let numberOfImpostors = document.getElementById("numberOfImpostors");
+let numberOfImpostors_advanced = document.getElementById("numberOfImpostors_advanced");
 let gifSpeed = document.getElementById("gifSpeed");
+let gifSpeed_advanced = document.getElementById("gifSpeed_advanced");
 let enlargeOutput = document.getElementById("enlargeOutput");
+let enlargeOutput_advanced = document.getElementById("enlargeOutput_advanced");
 let imageInput = document.getElementById("imageInput");
 let btnGenerate = document.getElementById("btnGenerate");
-let btnHelp = document.getElementById("btnHelp");
 let status = document.getElementById("status");
 let loader = document.getElementById("loader");
 let outputImage = document.getElementById("outputImage");
@@ -28,8 +32,18 @@ let waveC = document.getElementById("waveC");
 
 let colorCollapse = document.getElementById("colorCollapse");
 let compressionPercent = document.getElementById("compressionPercent");
+let compressionPercent_advanced = document.getElementById("compressionPercent_advanced");
 let compressionPercentDisplay = document.getElementById("compressionPercentDisplay");
 let compressionPercentContainer = document.getElementById("compressionPercentContainer");
+
+// advanced settings for nerds:
+
+let toggleAdvancedSettings = document.getElementById("toggleAdvancedSettings");
+
+let numWorkers = document.getElementById("numWorkers");
+let numWorkersDisplay = document.getElementById("numWorkersDisplay");
+let gifQuality = document.getElementById("gifQuality");
+let gifQualityDisplay = document.getElementById("gifQualityDisplay");
 
 var startTime;
 var endTime;
@@ -38,7 +52,7 @@ var endTime;
 btnGenerate.addEventListener("click", async function(e) {
   e.preventDefault(); //prevent page from reloading
 
-  gifmaker = new Dumpy();
+  gifmaker = new Dumpy(parseInt(numWorkers.value), parseInt(gifQuality.value));
   
   if (imageInput.files.length === 0) {
     alert("Please upload an image to sussify!");
@@ -63,14 +77,14 @@ btnGenerate.addEventListener("click", async function(e) {
     let img = new Image();
     status.textContent = "Coloring impostors...";
     img.onload = async function() {
-      gifmaker.setInterval(gifSpeed.value);
-      gifmaker.setMultiplier(enlargeOutput.value / 100);
+      gifmaker.setInterval(advancedSettings ? parseFloat(gifSpeed_advanced.value) : gifSpeed.value);
+      gifmaker.setMultiplier(advancedSettings ? parseFloat(enlargeOutput_advanced.value) : enlargeOutput.value / 100);
       gifmaker.setOriginalDimensions(img.height, img.width);
       gifmaker.setChoreographySettings(getChoreographyData());
       gifmaker.setColorCollapseSettings(getColorCollapseData());
 
       //this will determine the number of impostors we have in the output gif
-      let resizedDimensions = resizeImage(img.height, img.width, numberOfImpostors.value);
+      let resizedDimensions = resizeImage(img.height, img.width, advancedSettings ? parseInt(numberOfImpostors_advanced.value) : numberOfImpostors.value);
       gifmaker.setDimensions(resizedDimensions.height, resizedDimensions.width);
       
       let tempCanvas = document.createElement("canvas");
@@ -105,8 +119,8 @@ btnGenerate.addEventListener("click", async function(e) {
 
       gifBlob = URL.createObjectURL(gifBlob);
       
-      outputImage.width = img.width*(enlargeOutput.value / 100);
-      outputImage.height = img.height*(enlargeOutput.value / 100);
+      outputImage.width = img.width*(advancedSettings ? parseFloat(enlargeOutput_advanced.value) : enlargeOutput.value / 100);
+      outputImage.height = img.height*(advancedSettings ? parseFloat(enlargeOutput_advanced.value) : enlargeOutput.value / 100);
       outputImage.src = gifBlob;
       
       status.style.display = "none";
@@ -128,7 +142,7 @@ btnGenerate.addEventListener("click", async function(e) {
 btnDownload.addEventListener("click", function() {
   let link = document.createElement("a");
   link.href = outputImage.src;
-  link.download = `${imageInput.files[0].name.replace(/\.[^/.]+$/, "")}_${numberOfImpostors.value}lsb.gif`;
+  link.download = `${imageInput.files[0].name.replace(/\.[^/.]+$/, "")}_${advancedSettings ? parseInt(numberOfImpostors_advanced.value) : numberOfImpostors.value}lsb.gif`;
   
   link.click();
 });
@@ -149,30 +163,33 @@ function resizeImage(originalHeight, originalWidth, numberOfImpostors) {
   }
 }
 
-btnHelp.addEventListener("click", function() {
-  window.open('https://github.com/Walker30263/dumpygif', '_blank');
-});
-
-
 
 
 // ---------------------------------------- inputs/displays -------------------------------------
 
 function attachInputEvent(el, callback) {
   for (let event of ["mouseup", "mousedown", "mousemove", "change"]) {
-    el.addEventListener(event, callback)
+    el.addEventListener(event, callback);
   }
 }
 
 //update the number of impostors label when the input value changes
 attachInputEvent(numberOfImpostors, () => {
   document.getElementById("numberOfImpostorsDisplay").innerHTML = `Lines of Sussy Bakas: <strong>${numberOfImpostors.value}</strong><br>(higher value = better "resolution" but will take more time to generate)`;
-})
+});
+
+attachInputEvent(numberOfImpostors_advanced, () => {
+  document.getElementById("numberOfImpostorsDisplay").innerHTML = `Lines of Sussy Bakas: <strong>${numberOfImpostors_advanced.value}</strong><br>(higher value = better "resolution" but will take more time to generate)`;
+});
 
 //update the gif speed label when the input value changes
 attachInputEvent(gifSpeed, () => {
   document.getElementById("gifSpeedDisplay").textContent = "Gif speed... 😏: " + gifSpeed.value + " ms";
-})
+});
+
+attachInputEvent(gifSpeed_advanced, () => {
+  document.getElementById("gifSpeedDisplay").textContent = "Gif speed... 😏: " + gifSpeed_advanced.value + " ms";
+});
 
 //update the enlarge output label when the input value changes (actual value = input value/100)
 attachInputEvent(enlargeOutput, () => {
@@ -181,7 +198,25 @@ attachInputEvent(enlargeOutput, () => {
   } else {
     document.getElementById("enlargeOutputDisplay").textContent = "Enlarge Output: " + (enlargeOutput.value/100).toFixed(2) + "x";
   }
-})
+});
+
+attachInputEvent(enlargeOutput_advanced, () => {
+  if (enlargeOutput_advanced.value == 1) {
+    document.getElementById("enlargeOutputDisplay").textContent = "Enlarge Output: 1x (Default, no enlargement)";
+  } else {
+    document.getElementById("enlargeOutputDisplay").textContent = "Enlarge Output: " + parseFloat(enlargeOutput_advanced.value).toFixed(2) + "x";
+  }
+});
+
+// update the numWorkersDisplay label when the input value changes
+attachInputEvent(numWorkers, () => {
+  numWorkersDisplay.textContent = `Number of workers: ${numWorkers.value}`;
+});
+
+// update the gifQualityDisplay label when the input value changes
+attachInputEvent(gifQuality, () => {
+  gifQualityDisplay.textContent = `Pixel Sample Interval: ${gifQuality.value} (lower = higher quality GIF but will take longer to produce, and vice versa)`
+});
 
 // display additional settings when choreographed is checked
 
@@ -224,7 +259,52 @@ colorCollapse.addEventListener("change", function() {
 //update the compression percent label when the input value changes (actual value = input value/100)
 attachInputEvent(compressionPercent, () => {
   compressionPercentDisplay.textContent = `Compression: ${compressionPercent.value}% (higher = less contrast, but faster generation time)`;
-})
+});
+
+attachInputEvent(compressionPercent_advanced, () => {
+  compressionPercentDisplay.textContent = `Compression: ${compressionPercent_advanced.value}% (higher = less contrast, but faster generation time)`;
+});
+
+toggleAdvancedSettings.addEventListener("click", function() {
+  advancedSettings = !advancedSettings;
+  
+  let advancedSettingsElements = Array.from(document.getElementsByClassName("advancedSettings"));
+  let basicSettings = Array.from(document.getElementsByClassName("basicSettings"));
+
+  if (advancedSettings) { // if they're being enabled
+    numberOfImpostors_advanced.value = numberOfImpostors.value;
+    gifSpeed_advanced.value = gifSpeed.value;
+    enlargeOutput_advanced.value = enlargeOutput.value/100;
+    compressionPercent_advanced.value = compressionPercent.value;
+  } else { // if they're being disabled
+    numberOfImpostors.value = numberOfImpostors_advanced.value;
+    gifSpeed.value = gifSpeed_advanced.value;
+    enlargeOutput.value = enlargeOutput_advanced.value*100;
+    compressionPercent.value = compressionPercent_advanced.value;
+  }
+
+  advancedSettingsElements.forEach(el => {
+    if (advancedSettings) {
+      el.style.display = "block";
+    } else {
+      el.style.display = "none";
+    }
+  });
+
+  basicSettings.forEach(el => {
+    if (advancedSettings) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "";
+    }
+  });
+
+  if (advancedSettings) {
+    toggleAdvancedSettings.scrollIntoView({
+      behavior: 'instant'
+    });
+  }
+});
 
 // helper function to quickly get choreography data:
 
@@ -261,6 +341,6 @@ function getChoreographyData() {
 function getColorCollapseData() {
   return {
     collapse: colorCollapse.checked,
-    compressionPercent: compressionPercent.value
+    compressionPercent: advancedSettings ? compressionPercent_advanced.value : compressionPercent.value
   }
 }
