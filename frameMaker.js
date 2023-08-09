@@ -14,18 +14,25 @@ const ctx = c.getContext("2d");
 let impostorsOfDifferentColors = {};
 
 var sprites;
+var masks;
 var colors;
 var frameGenerationData;
 
 onmessage = async (e) => {
   sprites = e.data.sprites;
   colors = e.data.colors;
+  masks = e.data.masks;
   frameGenerationData = e.data.frameGenerationData;
   
   for (let i = 0; i < colors.length; i++) {
     let impostorsOfThisColor = {};
     for (let j = 1; j <= 6; j++) {
-      let impostor = await colorImpostor(sprites[j], colors[i]);
+      let impostor = await colorImpostor(j, colors[i]);
+      postMessage({
+        finished: false,
+        newImpostorForTesting: true,
+        impostor: impostor
+      });
       impostorsOfThisColor[j] = impostor;
     }
 
@@ -79,7 +86,10 @@ function generateImage(seed, pixels, originalWidth, originalHeight, multiplier, 
 }
 
 //create an impostor with the color of pixel
-function colorImpostor(impostor, pixel) {
+async function colorImpostor(impostorNumber, pixel) {
+  let impostor = sprites[impostorNumber];
+  let mask = masks[impostorNumber];
+  
   ctx.clearRect(0, 0, SPRITE_WIDTH, SPRITE_HEIGHT);
 
   pixel = JSON.parse(pixel);
@@ -95,21 +105,21 @@ function colorImpostor(impostor, pixel) {
 
   //get an array of pixel data
   let imageData = ctx.getImageData(0, 0, c.width, c.height);
+  
+  //if pixel is the bright red part of the original impostor...
+  mask.light.forEach(index => {
+    //change to new RGB
+    imageData.data[index] = pixel.red;
+    imageData.data[index+1] = pixel.green;
+    imageData.data[index+2] = pixel.blue;
+  });
 
-  for (let i = 0; i < imageData.data.length; i+=4) {
-    //if pixel is the bright red part of the original impostor...
-    if (imageData.data[i] == 198 && imageData.data[i+1] == 9 && imageData.data[i+2] == 9) {
-      //change to new RGB
-      imageData.data[i] = pixel.red;
-      imageData.data[i+1] = pixel.green;
-      imageData.data[i+2] = pixel.blue;
-    }
-    else if (imageData.data[i] == 123 && imageData.data[i+1] == 2 && imageData.data[i+2] == 53) {
-      imageData.data[i] = darkerColor[0];
-      imageData.data[i+1] = darkerColor[1];
-      imageData.data[i+2] = darkerColor[2];
-    }
-  }
+  //if pixel is the darker/shadow part of the original impostor...
+  mask.shadow.forEach(index => {
+    imageData.data[index] = darkerColor[0];
+    imageData.data[index+1] = darkerColor[1];
+    imageData.data[index+2] = darkerColor[2];
+  });
 
   ctx.putImageData(imageData, 0, 0);
   
