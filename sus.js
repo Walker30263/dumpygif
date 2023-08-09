@@ -8,6 +8,7 @@ import Pixel from '/pixel.js';
 */
 
 var sprites = {};
+var masks;
 
 window.onload = async function() {
   // display welcome "alert" on pageload if they haven't seen it before 
@@ -16,7 +17,7 @@ window.onload = async function() {
       title: "Welcome to DumpyGif!",
       icon: "info",
       html: `
-        You can use this website to generate a gif of impostors based on an uploaded image. (This website works best on a PC running Chrome.)
+        You can use this website to generate a gif of impostors (like pixel art but with impostors) based on an uploaded image. (This website works best on a PC running Chrome. Not fully tested on Safari/iOS yet, but it might work.)
         <br><br>
         To view examples and learn what the different settings mean, check out our <a class="alertLink" href="https://github.com/Walker30263/dumpygif" target="_blank" rel="noopener noreferrer">GitHub Repository</a>! You can also find this at any time by clicking the icon on the bottom right of the page.
         <br><br>
@@ -29,8 +30,6 @@ window.onload = async function() {
         <label for="neverSeeThisAgain" class="welcomeInputLabel">
           Never see this Welcome message again
         </label>
-        <br><br>
-        By using this website, you agree to our <a class="alertLink" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Terms of Service</a>
       `,
       focusConfirm: false,
       preConfirm: () => {
@@ -62,8 +61,8 @@ window.onload = async function() {
   if ((localStorage.getItem("notifications") == "true") && (typeof Notification !== "undefined") && (Notification.permission !== "granted")) {
     Notification.requestPermission().then(permission => {
       if (permission === "granted") {
-        let notif = new Notification("thank u for giving us notif perms :3", {
-          body: "we promise not to spam you uwu",
+        let notif = new Notification("Thank you for giving us permission to send notifications!", {
+          body: "We promise not to spam you! We will only send notifs if you're on another tab/window when a gif is finished.",
           icon: "assets/logo.png"
         });
 
@@ -72,8 +71,16 @@ window.onload = async function() {
     });
   }
 
+  masks = await loadMasks();
+
   btnGenerate.textContent = "Generate";
   btnGenerate.disabled = false;
+}
+
+async function loadMasks() {
+  const response = await fetch("assets/masks.json");
+  const data = response.json();
+  return data;
 }
 
 async function loadImageBitmap(imageUrl) {
@@ -180,6 +187,7 @@ class Dumpy {
         
         frameMaker.postMessage({
           sprites: sprites,
+          masks: masks,
           colors: colors,
           frameGenerationData: {
             seed: seed,
